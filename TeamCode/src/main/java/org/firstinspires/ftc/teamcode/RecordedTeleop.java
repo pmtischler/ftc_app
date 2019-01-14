@@ -1,58 +1,44 @@
-package com.github.pmtischler.opmode;
+package org.firstinspires.ftc.teamcode;
 
 import android.content.Context;
 import com.github.pmtischler.base.BlackBox;
 import com.github.pmtischler.base.Color;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import java.io.FileOutputStream;
 
 /**
  * Recorded teleop mode.
  * This mode records the hardware which can later be played back in autonomous.
- * Select the manual control mode by changing the parent class.
  */
-public class RecordedTeleop extends RelicRecoveryManual {
-    @TeleOp(name="pmt.Recorded.PlaybackAuto", group="pmtischler")
-    public static class RecordedTeleopPlaybackAuto extends RecordedTeleop {
+public class RecordedTeleop extends Teleop {
+    @TeleOp(name="TeamCode.Teleop.Recorded.1", group="TeamCode")
+    public static class RecordedTeleop1 extends RecordedTeleop {
         @Override public void init() {
-            filename = "PlaybackAuto";
+            filename = "RecordedTeleop1";
             super.init();
         }
     }
 
-    @TeleOp(name="pmt.Recorded.Red.Center", group="pmtischler")
-    public static class RecordedTeleopRedCenter extends RecordedTeleop {
+    @TeleOp(name="TeamCode.Teleop.Recorded.2", group="TeamCode")
+    public static class RecordedTeleop2 extends RecordedTeleop {
         @Override public void init() {
-            filename = getStartPositionName(Color.Ftc.RED,
-                                            StartPosition.FIELD_CENTER);
+            filename = "RecordedTeleop2";
             super.init();
         }
     }
 
-    @TeleOp(name="pmt.Recorded.Red.Corner", group="pmtischler")
-    public static class RecordedTeleopRedCorner extends RecordedTeleop {
+    @TeleOp(name="TeamCode.Teleop.Recorded.3", group="TeamCode")
+    public static class RecordedTeleop3 extends RecordedTeleop {
         @Override public void init() {
-            filename = getStartPositionName(Color.Ftc.RED,
-                                            StartPosition.FIELD_CORNER);
+            filename = "RecordedTeleop3";
             super.init();
         }
     }
 
-    @TeleOp(name="pmt.Recorded.Blue.Center", group="pmtischler")
-    public static class RecordedTeleopBlueCenter extends RecordedTeleop {
+    @TeleOp(name="TeamCode.Teleop.Recorded.4", group="TeamCode")
+    public static class RecordedTeleop4 extends RecordedTeleop {
         @Override public void init() {
-            filename = getStartPositionName(Color.Ftc.BLUE,
-                                            StartPosition.FIELD_CENTER);
-            super.init();
-        }
-    }
-
-    @TeleOp(name="pmt.Recorded.Blue.Corner", group="pmtischler")
-    public static class RecordedTeleopBlueCorner extends RecordedTeleop {
-        @Override public void init() {
-            filename = getStartPositionName(Color.Ftc.BLUE,
-                                            StartPosition.FIELD_CORNER);
+            filename = "RecordedTeleop4";
             super.init();
         }
     }
@@ -62,6 +48,7 @@ public class RecordedTeleop extends RelicRecoveryManual {
      */
     public void init() {
         super.init();
+
         startTime = -1;
         try {
             outputStream = hardwareMap.appContext.openFileOutput(
@@ -69,6 +56,8 @@ public class RecordedTeleop extends RelicRecoveryManual {
             recorder = new BlackBox.Recorder(hardwareMap, outputStream);
         } catch (Exception e) {
             e.printStackTrace();
+            telemetry.addLine(e.toString());
+            telemetry.update();
             requestOpModeStop();
         }
     }
@@ -78,6 +67,7 @@ public class RecordedTeleop extends RelicRecoveryManual {
      */
     public void loop() {
         super.loop();
+
         if (startTime == -1) {
             startTime = time;
         }
@@ -89,6 +79,8 @@ public class RecordedTeleop extends RelicRecoveryManual {
             recorder.recordAllDevices(elapsed);
         } catch (Exception e) {
             e.printStackTrace();
+            telemetry.addLine(e.toString());
+            telemetry.update();
             requestOpModeStop();
         }
     }
@@ -104,6 +96,8 @@ public class RecordedTeleop extends RelicRecoveryManual {
             outputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
+            telemetry.addLine(e.toString());
+            telemetry.update();
         }
     }
 
