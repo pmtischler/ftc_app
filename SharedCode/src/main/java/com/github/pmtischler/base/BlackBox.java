@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Robot BlackBox recording and playback.
@@ -28,11 +29,24 @@ public class BlackBox {
         }
 
         /**
-         * Records the hardware at the time.
+         * Records all hardware devices.
+         * @param time The time to record hardware at (seconds).
+         */
+        public void recordAllDevices(double time) throws Exception {
+            for (Map.Entry<String, DcMotor> entry : hardware.dcMotor.entrySet()) {
+                recordDevice(entry.getKey(), time);
+            }
+            for (Map.Entry<String, Servo> entry : hardware.servo.entrySet()) {
+                recordDevice(entry.getKey(), time);
+            }
+        }
+
+        /**
+         * Records the specific hardware device.
          * @param deviceName The device to record.
          * @param time The time to record hardware at (seconds).
          */
-        public void record(String deviceName, double time) throws Exception {
+        public void recordDevice(String deviceName, double time) throws Exception {
             HardwareDevice device = hardware.get(deviceName);
             double value;
             if (device instanceof DcMotor) {

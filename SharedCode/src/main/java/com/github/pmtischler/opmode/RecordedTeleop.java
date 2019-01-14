@@ -86,12 +86,7 @@ public class RecordedTeleop extends RelicRecoveryManual {
         telemetry.addData("Elapsed", elapsed);
 
         try {
-            for (MotorName m : MotorName.values()) {
-                recorder.record(m.name(), elapsed);
-            }
-            for (ServoName s : ServoName.values()) {
-                recorder.record(s.name(), elapsed);
-            }
+            recorder.recordAllDevices(elapsed);
         } catch (Exception e) {
             e.printStackTrace();
             requestOpModeStop();
