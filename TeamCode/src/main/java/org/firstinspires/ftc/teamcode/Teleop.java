@@ -30,9 +30,7 @@ public class Teleop extends BaseRobot {
     public void loop() {
         super.loop();
 
-        // Uncomment one of the following for driving.
-        // gamepadTankDrive();
-        gamepadMecanumDrive();
+        mecanumDriveFromGamepad();
 
         // TODO: Add rest of robot teleop control.
     }
