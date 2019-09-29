@@ -1,9 +1,11 @@
 package com.github.pmtischler.opmode;
 
 import com.github.pmtischler.control.Mecanum;
+import com.github.pmtischler.vision.Color;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import org.opencv.core.Core;
 
 /**
  * Robot code that is almost always needed.
@@ -13,6 +15,10 @@ public class BaseRobot extends OpMode {
      * Initializes the robot.
      */
     public void init() {
+        // Initialize OpenCV.
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
+        // Initialize hardware devices.
         initDriveMotors(
                 "dfl", "dfr",
                 "dbl", "dbr");
@@ -73,12 +79,21 @@ public class BaseRobot extends OpMode {
         telemetry.addData("Skystone.left.red", sl.red());
         telemetry.addData("Skystone.left.green", sl.green());
         telemetry.addData("Skystone.left.blue", sl.blue());
+        telemetry.addData("Skystone.left.isYellow",
+                Color.hsvIsYellow(
+                    Color.rgbToHsv(sl.red(), sl.green(), sl.blue())));
         telemetry.addData("Skystone.center.red", sc.red());
         telemetry.addData("Skystone.center.green", sc.green());
         telemetry.addData("Skystone.center.blue", sc.blue());
+        telemetry.addData("Skystone.center.isYellow",
+                Color.hsvIsYellow(
+                    Color.rgbToHsv(sc.red(), sc.green(), sc.blue())));
         telemetry.addData("Skystone.right.red", sr.red());
         telemetry.addData("Skystone.right.green", sr.green());
         telemetry.addData("Skystone.right.blue", sr.blue());
+        telemetry.addData("Skystone.right.isYellow",
+                Color.hsvIsYellow(
+                    Color.rgbToHsv(sr.red(), sr.green(), sr.blue())));
     }
 
     /**

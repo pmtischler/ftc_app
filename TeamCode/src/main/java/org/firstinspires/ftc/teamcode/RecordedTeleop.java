@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import android.content.Context;
 import com.github.pmtischler.base.BlackBox;
-import com.github.pmtischler.base.Color;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import java.io.FileOutputStream;
 
