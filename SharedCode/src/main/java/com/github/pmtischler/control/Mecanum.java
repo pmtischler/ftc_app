@@ -1,5 +1,7 @@
 package com.github.pmtischler.control;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -129,5 +131,52 @@ public class Mecanum {
           powers.set(i, powers.get(i) / maxMag);
         }
       }
+    }
+
+    /**
+     * Mecanum drive controls of motors.
+     */
+    public static class Drive {
+        /**
+         * Constructs the drive.
+         * @param frontLeft The front left drive motor.
+         * @param frontRight The front right drive motor.
+         * @param backLeft The back left drive motor.
+         * @param backRight The back right drive motor.
+         */
+        public Drive(DcMotor frontLeft, DcMotor frontRight,
+                     DcMotor backLeft, DcMotor backRight) {
+            this.frontLeft = frontLeft;
+            this.frontRight = frontRight;
+            this.backLeft = backLeft;
+            this.backRight = backRight;
+        }
+
+        /**
+         * Sets the drive power of the motors.
+         * @param motion Desired motion to achieve.
+         */
+        public void setDrive(Motion motion) {
+            Mecanum.Wheels wheels = Mecanum.motionToWheels(motion);
+            this.frontLeft.setPower(wheels.frontLeft);
+            this.frontRight.setPower(wheels.frontRight);
+            this.backLeft.setPower(wheels.backLeft);
+            this.backRight.setPower(wheels.backRight);
+        }
+
+        /**
+         * Sets the drive power of the motors based on gamepad input.
+         * @param gamepad The gamepad for drive input.
+         */
+        public void setDriveFromGamepad(Gamepad gamepad) {
+            setDrive(Mecanum.joystickToMotion(
+                        gamepad.left_stick_x, gamepad.left_stick_y,
+                        gamepad.right_stick_x, gamepad.right_stick_y));
+        }
+
+        private DcMotor frontLeft;
+        private DcMotor frontRight;
+        private DcMotor backLeft;
+        private DcMotor backRight;
     }
 }
