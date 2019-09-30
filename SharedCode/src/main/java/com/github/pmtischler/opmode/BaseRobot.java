@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.opencv.core.Core;
+import java.util.Map;
 
 /**
  * Robot code that is almost always needed.
@@ -15,15 +16,15 @@ public class BaseRobot extends OpMode {
      * Initializes the robot.
      */
     public void init() {
-        // Initialize OpenCV.
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-        // Initialize hardware devices.
         initDriveMotors(
                 "dfl", "dfr",
                 "dbl", "dbr");
         initSkystoneSensors(
                 "sl", "sc", "sr");
+
+        resetMotorEncoders();
     }
 
     /**
@@ -40,13 +41,19 @@ public class BaseRobot extends OpMode {
         dfr = hardwareMap.dcMotor.get(frontRight);
         dbl = hardwareMap.dcMotor.get(backLeft);
         dbr = hardwareMap.dcMotor.get(backRight);
+    }
 
-        DcMotor[] motors = {dfl, dfr, dbl, dbr};
-        for (DcMotor motor : motors) {
+    /**
+     * Resets motor encoders to start at 0 position.
+     */
+    protected void resetMotorEncoders() {
+        for (Map.Entry<String, DcMotor> e : hardwareMap.dcMotor.entrySet()) {
+            DcMotor motor = e.getValue();
+            DcMotor.RunMode prev_mode = motor.getMode();
             // Ensure current position interpreted as 0.
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            // Re-enable direct power drive.
-            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            // Reset to previous mode.
+            motor.setMode(prev_mode);
         }
     }
 
@@ -67,15 +74,6 @@ public class BaseRobot extends OpMode {
      * Main loop function.
      */
     public void loop() {
-        telemetry.addData(
-                "Drive.frontLeft.Position", dfl.getCurrentPosition());
-        telemetry.addData(
-                "Drive.frontRight.Position", dfl.getCurrentPosition());
-        telemetry.addData(
-                "Drive.backLeft.Position", dbl.getCurrentPosition());
-        telemetry.addData(
-                "Drive.backRight.Position", dbr.getCurrentPosition());
-
         telemetry.addData("Skystone.left.red", sl.red());
         telemetry.addData("Skystone.left.green", sl.green());
         telemetry.addData("Skystone.left.blue", sl.blue());
