@@ -79,21 +79,23 @@ public class BaseRobot extends OpMode {
         telemetry.addData("Skystone.left.red", sl.red());
         telemetry.addData("Skystone.left.green", sl.green());
         telemetry.addData("Skystone.left.blue", sl.blue());
-        telemetry.addData("Skystone.left.isYellow",
-                Color.hsvIsYellow(
-                    Color.rgbToHsv(sl.red(), sl.green(), sl.blue())));
+        slIsYellow = Color.rgbIsYellow(sl.red(), sl.green(), sl.blue());
+        telemetry.addData("Skystone.left.isYellow", slIsYellow);
+
         telemetry.addData("Skystone.center.red", sc.red());
         telemetry.addData("Skystone.center.green", sc.green());
         telemetry.addData("Skystone.center.blue", sc.blue());
-        telemetry.addData("Skystone.center.isYellow",
-                Color.hsvIsYellow(
-                    Color.rgbToHsv(sc.red(), sc.green(), sc.blue())));
+        scIsYellow = Color.rgbIsYellow(sc.red(), sc.green(), sc.blue());
+        telemetry.addData("Skystone.center.isYellow", scIsYellow);
+
         telemetry.addData("Skystone.right.red", sr.red());
         telemetry.addData("Skystone.right.green", sr.green());
         telemetry.addData("Skystone.right.blue", sr.blue());
-        telemetry.addData("Skystone.right.isYellow",
-                Color.hsvIsYellow(
-                    Color.rgbToHsv(sr.red(), sr.green(), sr.blue())));
+        srIsYellow = Color.rgbIsYellow(sr.red(), sr.green(), sr.blue());
+        telemetry.addData("Skystone.right.isYellow", srIsYellow);
+
+        telemetry.addData(
+                "IsSkystone", !slIsYellow && !scIsYellow && !srIsYellow);
     }
 
     /**
@@ -159,4 +161,9 @@ public class BaseRobot extends OpMode {
     private ColorSensor sl;
     private ColorSensor sc;
     private ColorSensor sr;
+
+    // Whether the color sensors read yellow.
+    private boolean slIsYellow;
+    private boolean scIsYellow;
+    private boolean srIsYellow;
 }
