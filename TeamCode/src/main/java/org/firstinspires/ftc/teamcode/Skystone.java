@@ -1,5 +1,6 @@
-package com.github.pmtischler.vision;
+package org.firstinspires.ftc.teamcode;
 
+import com.github.pmtischler.vision.Color;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
