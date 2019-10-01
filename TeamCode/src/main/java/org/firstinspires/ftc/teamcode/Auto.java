@@ -31,7 +31,7 @@ public class Auto extends OpMode {
         skystoneLeft = hardwareMap.colorSensor.get("skystoneLeft");
         skystoneCenter = hardwareMap.colorSensor.get("skystoneCenter");
         skystoneRight = hardwareMap.colorSensor.get("skystoneRight");
-        detector = new Skystone.Detector(
+        detector = new Detector(
                 skystoneLeft, skystoneCenter, skystoneRight);
     }
 
@@ -55,7 +55,7 @@ public class Auto extends OpMode {
             .addData("blue", skystoneRight.blue());
 
         // Log whether the detector sees stone or skystone.
-        telemetry.addLine("Skystone.Detector")
+        telemetry.addLine("Detector")
             .addData("detectsStone", detector.detectsStone())
             .addData("detectsSkystone", detector.detectsSkystone());
     }
@@ -73,5 +73,5 @@ public class Auto extends OpMode {
     private ColorSensor skystoneCenter;
     private ColorSensor skystoneRight;
     // Detects stones and skystone objects.
-    private Skystone.Detector detector;
+    private Detector detector;
 }
