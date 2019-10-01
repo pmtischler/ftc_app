@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.github.pmtischler.base.BlackBox;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 
 /**
@@ -49,7 +50,8 @@ public class PlaybackAuto extends OpMode {
         startTime = -1;
         try {
             inputStream = hardwareMap.appContext.openFileInput(filename);
-            player = new BlackBox.Player(inputStream, hardwareMap);
+            bufferedInputStream = new BufferedInputStream(inputStream, 4 << 10);
+            player = new BlackBox.Player(bufferedInputStream, hardwareMap);
         } catch (Exception e) {
             e.printStackTrace();
             telemetry.addLine(e.toString());
@@ -84,6 +86,7 @@ public class PlaybackAuto extends OpMode {
      */
     public void stop() {
         try {
+            bufferedInputStream.close();
             inputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -96,6 +99,8 @@ public class PlaybackAuto extends OpMode {
     protected String filename;
     // The input file stream.
     private FileInputStream inputStream;
+    // The buffered input stream.
+    private BufferedInputStream bufferedInputStream;
     // The hardware player.
     private BlackBox.Player player;
     // Start time of recording.

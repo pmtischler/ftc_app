@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import android.content.Context;
 import com.github.pmtischler.base.BlackBox;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 
 /**
@@ -52,7 +53,9 @@ public class RecordedTeleop extends Teleop {
         try {
             outputStream = hardwareMap.appContext.openFileOutput(
                     filename, Context.MODE_PRIVATE);
-            recorder = new BlackBox.Recorder(hardwareMap, outputStream);
+            bufferedOutputStream = new BufferedOutputStream(
+                    outputStream, 4 << 10);
+            recorder = new BlackBox.Recorder(hardwareMap, bufferedOutputStream);
         } catch (Exception e) {
             e.printStackTrace();
             telemetry.addLine(e.toString());
@@ -92,6 +95,7 @@ public class RecordedTeleop extends Teleop {
 
         try {
             recorder = null;
+            bufferedOutputStream.close();
             outputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,6 +108,8 @@ public class RecordedTeleop extends Teleop {
     protected String filename;
     // The output file stream.
     private FileOutputStream outputStream;
+    // The buffered output stream.
+    private BufferedOutputStream bufferedOutputStream;
     // The hardware recorder.
     private BlackBox.Recorder recorder;
     // Start time of recording.
