@@ -24,6 +24,11 @@ public class Teleop extends OpMode {
                 hardwareMap.dcMotor.get("driveFrontRight"),
                 hardwareMap.dcMotor.get("driveBackLeft"),
                 hardwareMap.dcMotor.get("driveBackRight"));
+        // Setup gripper for the stone.
+        gripper = new Gripper(
+                hardwareMap.servo.get("gripperLeft"),
+                hardwareMap.servo.get("gripperRight"),
+                hardwareMap.servo.get("gripperWrist"));
     }
 
     /**
@@ -33,6 +38,27 @@ public class Teleop extends OpMode {
     public void loop() {
         // Drive using Mecanum controls for gamepad 1.
         mecanum.setDriveFromGamepad(gamepad1);
+
+        // Open / close the gripper.
+        //   A     -> Close.
+        //   A + B -> Half open.
+        //       B -> Open.
+        if (gamepad1.a && gamepad1.b) {
+            gripper.openLeft();
+        } else if (gamepad1.a) {
+            gripper.close();
+        } else if (gamepad1.b) {
+            gripper.open();
+        }
+
+        // Rotate the gripper.
+        //   Y -> Front to back.
+        //   X -> Left to right.
+        if (gamepad1.y) {
+            gripper.rotateToFrontBack();
+        } else if (gamepad1.x) {
+            gripper.rotateToLeftRight();
+        }
     }
 
     /**
@@ -43,4 +69,6 @@ public class Teleop extends OpMode {
 
     // Controls driving of the robot.
     private Mecanum.Drive mecanum;
+    // Controls the gripper for stones.
+    private Gripper gripper;
 }
