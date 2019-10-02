@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <integer name="raised_jewel_angle_percent">100</integer>
-    <integer name="lowered_jewel_angle_percent">0</integer>
-    <integer name="center_jewel_angle_percent">50</integer>
-    <integer name="forward_jewel_angle_percent">100</integer>
-    <integer name="backward_jewel_angle_percent">0</integer>
-</resources>
