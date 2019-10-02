@@ -20,15 +20,15 @@ public class Teleop extends OpMode {
     public void init() {
         // Setup motors for Mecanum driving.
         mecanum = new Mecanum.Drive(
-                hardwareMap.dcMotor.get("driveFrontLeft"),
-                hardwareMap.dcMotor.get("driveFrontRight"),
-                hardwareMap.dcMotor.get("driveBackLeft"),
-                hardwareMap.dcMotor.get("driveBackRight"));
+                hardwareMap.dcMotor.get("dfl"),
+                hardwareMap.dcMotor.get("dfr"),
+                hardwareMap.dcMotor.get("dbl"),
+                hardwareMap.dcMotor.get("dbr"));
         // Setup gripper for the stone.
         gripper = new Gripper(
-                hardwareMap.servo.get("gripperLeft"),
-                hardwareMap.servo.get("gripperRight"),
-                hardwareMap.servo.get("gripperWrist"));
+                hardwareMap.servo.get("gl"),
+                hardwareMap.servo.get("gr"),
+                hardwareMap.servo.get("gw"));
     }
 
     /**

@@ -22,15 +22,15 @@ public class Auto extends OpMode {
 
         // Setup motors for Mecanum driving.
         mecanum = new Mecanum.Drive(
-                hardwareMap.dcMotor.get("driveFrontLeft"),
-                hardwareMap.dcMotor.get("driveFrontRight"),
-                hardwareMap.dcMotor.get("driveBackLeft"),
-                hardwareMap.dcMotor.get("driveBackRight"));
+                hardwareMap.dcMotor.get("dfl"),
+                hardwareMap.dcMotor.get("dfr"),
+                hardwareMap.dcMotor.get("dbl"),
+                hardwareMap.dcMotor.get("dbr"));
 
         // Initialize the Skystone detector.
-        skystoneLeft = hardwareMap.colorSensor.get("skystoneLeft");
-        skystoneCenter = hardwareMap.colorSensor.get("skystoneCenter");
-        skystoneRight = hardwareMap.colorSensor.get("skystoneRight");
+        skystoneLeft = hardwareMap.colorSensor.get("sl");
+        skystoneCenter = hardwareMap.colorSensor.get("sc");
+        skystoneRight = hardwareMap.colorSensor.get("sr");
         detector = new Detector(
                 skystoneLeft, skystoneCenter, skystoneRight);
     }
