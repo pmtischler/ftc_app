@@ -50,7 +50,7 @@ public class PlaybackAuto extends OpMode {
         startTime = -1;
         try {
             inputStream = hardwareMap.appContext.openFileInput(filename);
-            bufferedInputStream = new BufferedInputStream(inputStream, 4 << 10);
+            bufferedInputStream = new BufferedInputStream(inputStream, 1 << 20);
             player = new BlackBox.Player(bufferedInputStream, hardwareMap);
         } catch (Exception e) {
             e.printStackTrace();

@@ -54,7 +54,7 @@ public class RecordedTeleop extends Teleop {
             outputStream = hardwareMap.appContext.openFileOutput(
                     filename, Context.MODE_PRIVATE);
             bufferedOutputStream = new BufferedOutputStream(
-                    outputStream, 4 << 10);
+                    outputStream, 1 << 20);
             recorder = new BlackBox.Recorder(hardwareMap, bufferedOutputStream);
         } catch (Exception e) {
             e.printStackTrace();
