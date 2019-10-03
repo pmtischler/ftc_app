@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.control.Gripper;
 import org.firstinspires.ftc.teamcode.control.Mecanum;
+import org.firstinspires.ftc.teamcode.sensors.Imu;
 import org.firstinspires.ftc.teamcode.vision.Detector;
 import org.opencv.core.Core;
 
@@ -40,6 +42,8 @@ public class Hardware extends OpMode {
         detector = new Detector(
                 skystoneLeft, skystoneCenter, skystoneRight);
 
+        // Setup the IMU.
+        imu = new Imu(hardwareMap.get(BNO055IMU.class, "imu"), telemetry);
     }
 
     /**
@@ -66,4 +70,6 @@ public class Hardware extends OpMode {
     protected ColorSensor skystoneRight;
     // Detects stones and skystone objects.
     protected Detector detector;
+    // IMU device.
+    protected Imu imu;
 }
