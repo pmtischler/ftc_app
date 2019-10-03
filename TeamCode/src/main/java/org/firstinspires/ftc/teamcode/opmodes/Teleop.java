@@ -3,33 +3,19 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.teamcode.control.Gripper;
-import org.firstinspires.ftc.teamcode.control.Mecanum;
 
 /**
  * Teleop mode.
  */
 @TeleOp(name="TeamCode.Teleop", group="TeamCode")
-public class Teleop extends OpMode {
+public class Teleop extends Hardware {
 
     /**
      * Initializes the robot.
      * Called once before the match when the "Init" button is pressed.
      */
     public void init() {
-        // Setup motors for Mecanum driving.
-        mecanum = new Mecanum.Drive(
-                hardwareMap.dcMotor.get("dfl"),
-                hardwareMap.dcMotor.get("dfr"),
-                hardwareMap.dcMotor.get("dbl"),
-                hardwareMap.dcMotor.get("dbr"));
-        // Setup gripper for the stone.
-        gripper = new Gripper(
-                hardwareMap.servo.get("gl"),
-                hardwareMap.servo.get("gr"),
-                hardwareMap.servo.get("gw"));
+        super.init();
     }
 
     /**
@@ -37,6 +23,8 @@ public class Teleop extends OpMode {
      * Called repeatedly during the match after pressing "Play".
      */
     public void loop() {
+        super.loop();
+
         // Drive using Mecanum controls for gamepad 1.
         mecanum.setDriveFromGamepad(gamepad1);
 
@@ -66,10 +54,7 @@ public class Teleop extends OpMode {
      * Stops the robot.
      * Called once at the end of the match when time runs out.
      */
-    public void stop() {}
-
-    // Controls driving of the robot.
-    private Mecanum.Drive mecanum;
-    // Controls the gripper for stones.
-    private Gripper gripper;
+    public void stop() {
+        super.stop();
+    }
 }
