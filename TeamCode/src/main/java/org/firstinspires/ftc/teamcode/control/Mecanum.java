@@ -158,9 +158,9 @@ public class Mecanum {
          */
         public void setDrive(Motion motion) {
             Mecanum.Wheels wheels = Mecanum.motionToWheels(motion);
-            this.frontLeft.setPower(wheels.frontLeft);
+            this.frontLeft.setPower(-wheels.frontLeft);
             this.frontRight.setPower(wheels.frontRight);
-            this.backLeft.setPower(wheels.backLeft);
+            this.backLeft.setPower(-wheels.backLeft);
             this.backRight.setPower(wheels.backRight);
         }
 
