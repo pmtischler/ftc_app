@@ -28,25 +28,26 @@ public class Teleop extends Hardware {
         // Drive using Mecanum controls for gamepad 1.
         mecanum.setDriveFromGamepad(gamepad1);
 
-        // Open / close the gripper.
-        //   A     -> Close.
-        //   A + B -> Half open.
-        //       B -> Open.
-        if (gamepad1.a && gamepad1.b) {
-            gripper.openLeft();
-        } else if (gamepad1.a) {
-            gripper.close();
-        } else if (gamepad1.b) {
-            gripper.open();
-        }
-
-        // Rotate the gripper.
-        //   Y -> Front to back.
-        //   X -> Left to right.
-        if (gamepad1.y) {
-            gripper.rotateToFrontBack();
-        } else if (gamepad1.x) {
-            gripper.rotateToLeftRight();
+        if (gripper != null) {
+            // Open / close the gripper.
+            //   A     -> Close.
+            //   A + B -> Half open.
+            //       B -> Open.
+            if (gamepad1.a && gamepad1.b) {
+                gripper.openLeft();
+            } else if (gamepad1.a) {
+                gripper.close();
+            } else if (gamepad1.b) {
+                gripper.open();
+            }
+            // Rotate the gripper.
+            //   Y -> Front to back.
+            //   X -> Left to right.
+            if (gamepad1.y) {
+                gripper.rotateToFrontBack();
+            } else if (gamepad1.x) {
+                gripper.rotateToLeftRight();
+            }
         }
     }
 

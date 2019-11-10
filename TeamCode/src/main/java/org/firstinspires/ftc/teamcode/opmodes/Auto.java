@@ -21,7 +21,9 @@ public class Auto extends Hardware {
      */
     public void init() {
         super.init();
-        reckon = new ImuDeadReckon(imu);
+        if (imu != null) {
+            reckon = new ImuDeadReckon(imu);
+        }
     }
 
     /**
@@ -32,42 +34,54 @@ public class Auto extends Hardware {
         super.loop();
 
         // Log the color sensor readings.
-        telemetry.addLine("Skystone.Color.Left")
-            .addData("red", skystoneLeft.red())
-            .addData("green", skystoneLeft.green())
-            .addData("blue", skystoneLeft.blue());
-        telemetry.addLine("Skystone.Color.Center")
-            .addData("red", skystoneCenter.red())
-            .addData("green", skystoneCenter.green())
-            .addData("blue", skystoneCenter.blue());
-        telemetry.addLine("Skystone.Color.Right")
-            .addData("red", skystoneRight.red())
-            .addData("green", skystoneRight.green())
-            .addData("blue", skystoneRight.blue());
+        if (skystoneLeft != null) {
+            telemetry.addLine("Skystone.Color.Left")
+                .addData("red", skystoneLeft.red())
+                .addData("green", skystoneLeft.green())
+                .addData("blue", skystoneLeft.blue());
+        }
+        if (skystoneCenter != null) {
+            telemetry.addLine("Skystone.Color.Center")
+                .addData("red", skystoneCenter.red())
+                .addData("green", skystoneCenter.green())
+                .addData("blue", skystoneCenter.blue());
+        }
+        if (skystoneRight != null) {
+            telemetry.addLine("Skystone.Color.Right")
+                .addData("red", skystoneRight.red())
+                .addData("green", skystoneRight.green())
+                .addData("blue", skystoneRight.blue());
+        }
 
         // Log whether the detector sees stone or skystone.
-        telemetry.addLine("Detector")
-            .addData("detectsStone", detector.detectsStone())
-            .addData("detectsSkystone", detector.detectsSkystone());
+        if (detector != null) {
+            telemetry.addLine("Detector")
+                .addData("detectsStone", detector.detectsStone())
+                .addData("detectsSkystone", detector.detectsSkystone());
+        }
 
         // Log the IMU state.
-        Orientation angles = imu.device.getAngularOrientation(
-                AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        Acceleration acceleration = imu.device.getLinearAcceleration();
-        telemetry.addLine("BNO055IMU")
-            .addData("status", imu.device.getSystemStatus().toShortString())
-            .addData("calib", imu.device.getCalibrationStatus().toString())
-            .addData("heading", angles.firstAngle)
-            .addData("roll", angles.secondAngle)
-            .addData("pitch", angles.thirdAngle)
-            .addData("acc", acceleration.toString());
+        if (imu != null) {
+            Orientation angles = imu.device.getAngularOrientation(
+                    AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            Acceleration acceleration = imu.device.getLinearAcceleration();
+            telemetry.addLine("BNO055IMU")
+                .addData("status", imu.device.getSystemStatus().toShortString())
+                .addData("calib", imu.device.getCalibrationStatus().toString())
+                .addData("heading", angles.firstAngle)
+                .addData("roll", angles.secondAngle)
+                .addData("pitch", angles.thirdAngle)
+                .addData("acc", acceleration.toString());
+        }
 
         // Log the dead reckon state.
-        reckon.loop();
-        telemetry.addLine("ImuDeadReckon")
-            .addData("pos", reckon.position.toString())
-            .addData("vel", reckon.velocity.toString())
-            .addData("acc", reckon.acceleration.toString());
+        if (reckon != null) {
+            reckon.loop();
+            telemetry.addLine("ImuDeadReckon")
+                .addData("pos", reckon.position.toString())
+                .addData("vel", reckon.velocity.toString())
+                .addData("acc", reckon.acceleration.toString());
+        }
     }
 
     /**
