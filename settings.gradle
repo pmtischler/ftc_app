@@ -1,4 +1,3 @@
 include ':FtcRobotController'
 include ':opencv'
-include ':SharedCode'
 include ':TeamCode'
