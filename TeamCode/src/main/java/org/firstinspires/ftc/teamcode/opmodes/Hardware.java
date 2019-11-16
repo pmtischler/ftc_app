@@ -34,9 +34,9 @@ public class Hardware extends OpMode {
                 hardwareMap.servo.get("gw"));
 
         // Setup the Skystone detector.
-        skystoneLeft = hardwareMap.colorSensor.get("sl");
-        skystoneCenter = hardwareMap.colorSensor.get("sc");
-        skystoneRight = hardwareMap.colorSensor.get("sr");
+        skystoneLeft = hardwareMap.get(ColorSensor.class, "sl");
+        skystoneCenter = hardwareMap.get(ColorSensor.class, "sc");
+        skystoneRight = hardwareMap.get(ColorSensor.class, "sr");
         detector = new Detector(
                 skystoneLeft, skystoneCenter, skystoneRight);
     }
