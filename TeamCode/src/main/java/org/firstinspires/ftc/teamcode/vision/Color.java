@@ -15,9 +15,9 @@ public class Color {
     public static Mat rgbToHsv(int red, int green, int blue) {
         Mat rgb = new Mat(1, 1, CvType.CV_8UC3);
         byte[] pixel = new byte[3];
-        pixel[0] = (byte)Integer.toUnsignedLong(red);
-        pixel[1] = (byte)Integer.toUnsignedLong(green);
-        pixel[2] = (byte)Integer.toUnsignedLong(blue);
+        pixel[0] = toUnsignedByte(red);
+        pixel[1] = toUnsignedByte(green);
+        pixel[2] = toUnsignedByte(blue);
         rgb.put(0, 0, pixel);
         return rgbToHsv(rgb);
     }
@@ -45,10 +45,20 @@ public class Color {
     public static boolean hsvIsYellow(Mat hsv) {
         byte[] pixel = new byte[3];
         hsv.get(0, 0, pixel);
-        int hue = Byte.toUnsignedInt(pixel[0]);
-        int saturation = Byte.toUnsignedInt(pixel[1]);
-        int value = Byte.toUnsignedInt(pixel[2]);
+        int hue = toUnsignedInt(pixel[0]);
+        int saturation = toUnsignedInt(pixel[1]);
+        int value = toUnsignedInt(pixel[2]);
         // Not too white, not too black, in the range of yellow hue.
         return saturation > 25 && value > 127 && hue > 50/2 && hue < 70/2;
+    }
+
+    // Utility not available in FTC's version of Java.
+    private static byte toUnsignedByte(int value) {
+        return (byte)(value & (-1L >>> 32));
+    }
+
+    // Utility not available in FTC's version of Java.
+    private static int toUnsignedInt(byte value) {
+        return ((int) value) & 0xff;
     }
 }

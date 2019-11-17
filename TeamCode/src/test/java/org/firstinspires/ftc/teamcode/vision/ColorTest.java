@@ -56,7 +56,7 @@ public class ColorTest {
     }
 
     @Test
-    public void testHsvIsYellow() throws Exception {
+    public void testRgbIsYellow() throws Exception {
         // Red.
         assertFalse(Color.rgbIsYellow(255, 0, 0));
         // Green.
