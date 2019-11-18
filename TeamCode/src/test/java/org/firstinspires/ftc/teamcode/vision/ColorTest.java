@@ -70,4 +70,20 @@ public class ColorTest {
         // Yellow.
         assertTrue(Color.rgbIsYellow(255, 255, 0));
     }
+    @Test
+    public void testRgbIsYellowAfterNormalization() throws Exception {
+        // Red.
+        assertFalse(Color.rgbIsYellowAfterNormalization(255*10, 0, 0));
+        // Green.
+        assertFalse(Color.rgbIsYellowAfterNormalization(0, 255*10, 0));
+        // Blue.
+        assertFalse(Color.rgbIsYellowAfterNormalization(0, 0, 255*10));
+        // White.
+        assertFalse(Color.rgbIsYellowAfterNormalization(
+                    255*10, 255*10, 255*10));
+        // Black.
+        assertFalse(Color.rgbIsYellowAfterNormalization(0, 0, 0));
+        // Yellow.
+        assertTrue(Color.rgbIsYellowAfterNormalization(255*10, 255*10, 0));
+    }
 }
