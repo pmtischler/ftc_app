@@ -17,6 +17,27 @@ public class Gripper {
         this.wrist = wrist;
     }
 
+    // The possible finger positions.
+    public enum FingerPosition {
+        OPEN_LEFT,
+        OPEN,
+        CLOSED,
+    }
+
+    /**
+     * Sets the finger position.
+     * @param position The position to set.
+     */
+    public void setFingerPosition(FingerPosition position) {
+        if (position == FingerPosition.OPEN_LEFT) {
+            openLeft();
+        } else if (position == FingerPosition.OPEN) {
+            open();
+        } else if (position == FingerPosition.CLOSED) {
+            close();
+        }
+    }
+
     /**
      * Closes the fingers to grip a stone.
      */
@@ -38,6 +59,24 @@ public class Gripper {
      */
     public void openLeft() {
         leftFinger.setPosition(LEFT_OPEN);
+    }
+
+    // The possible wrist positions.
+    public enum WristPosition {
+        FRONT_BACK,
+        LEFT_RIGHT,
+    }
+
+    /**
+     * Sets the wrist position.
+     * @param position The position to set.
+     */
+    public void setWristPosition(WristPosition position) {
+        if (position == WristPosition.FRONT_BACK) {
+            rotateToFrontBack();
+        } else if (position == WristPosition.LEFT_RIGHT) {
+            rotateToLeftRight();
+        }
     }
 
     /**

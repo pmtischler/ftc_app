@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.teamcode.base.StateMachine;
+import org.firstinspires.ftc.teamcode.control.Gripper;
 import org.firstinspires.ftc.teamcode.control.Mecanum;
 
 @Autonomous(name="TeamCode.Auto", group="TeamCode")
@@ -19,10 +20,15 @@ public class Auto extends Hardware {
 
         StateMachine.State initial = new WaitForSeconds(1);
         initial
+            .setNext(new SetGripperFingers(Gripper.FingerPosition.CLOSED))
+            .setNext(new SetGripperWrist(Gripper.WristPosition.LEFT_RIGHT))
             .setNext(new SetGantrySpeed(0.0, 0.5))
             .setNext(new WaitForSeconds(1))
             .setNext(new SetGantrySpeed(0.5, 0.0))
             .setNext(new WaitForSeconds(1))
+            .setNext(new SetGripperFingers(Gripper.FingerPosition.CLOSED))
+            .setNext(new SetGripperWrist(Gripper.WristPosition.LEFT_RIGHT))
+            .setNext(new WaitForSeconds(0.5))
             .setNext(new SetMotion(new Mecanum.Motion(1, 0, 0)))
             .setNext(new WaitForSeconds(5))
             .setNext(new SetMotion(new Mecanum.Motion(0, 0, 0)));
@@ -134,6 +140,51 @@ public class Auto extends Hardware {
         private double xSpeed;
         private double zSpeed;
     }
+
+    /**
+     * State which actuates the gripper fingers.
+     */
+    public class SetGripperFingers extends StateMachine.State {
+        public SetGripperFingers(Gripper.FingerPosition position) {
+            this.position = position;
+        }
+
+        public void start() {}
+
+        public StateMachine.State update() {
+            gripper.setFingerPosition(position);
+            return next;
+        }
+
+        public String toString() {
+            return "SetGripperFingers";
+        }
+
+        private Gripper.FingerPosition position;
+    }
+
+    /**
+     * State which actuates the gripper wrist.
+     */
+    public class SetGripperWrist extends StateMachine.State {
+        public SetGripperWrist(Gripper.WristPosition position) {
+            this.position = position;
+        }
+
+        public void start() {}
+
+        public StateMachine.State update() {
+            gripper.setWristPosition(position);
+            return next;
+        }
+
+        public String toString() {
+            return "SetGripperWrist";
+        }
+
+        private Gripper.WristPosition position;
+    }
+
 
     // State machine for the auto program.
     private StateMachine machine;
