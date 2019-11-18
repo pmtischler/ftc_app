@@ -9,17 +9,34 @@ public class StateMachine {
     /**
      * A state in the state machine.
      */
-    public static interface State {
+    public static abstract class State {
         /**
          * Called when the state first becomes the active state.
          */
-        public void start();
+        public abstract void start();
 
         /**
          * Called on each update.
          * @return The next state to run.
          */
-        public State update();
+        public abstract State update();
+
+        /**
+         * Describes the state.
+         */
+        public abstract String toString();
+
+        /**
+         * Set the next state.
+         * Returns the next state for use in chaining.
+         */
+        public State setNext(State next) {
+            this.next = next;
+            return next;
+        }
+
+        // The next state if only one possible next state.
+        protected State next;
     }
 
     /**

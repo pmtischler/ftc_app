@@ -3,13 +3,9 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.teamcode.base.StateMachine;
+import org.firstinspires.ftc.teamcode.control.Mecanum;
 
 @Autonomous(name="TeamCode.Auto", group="TeamCode")
 public class Auto extends Hardware {
@@ -20,6 +16,24 @@ public class Auto extends Hardware {
      */
     public void init() {
         super.init();
+
+        StateMachine.State initial = new WaitForSeconds(1);
+        initial
+            .setNext(new SetMotion(new Mecanum.Motion(1, 0, 0)))
+            .setNext(new WaitForSeconds(5))
+            .setNext(new SetMotion(new Mecanum.Motion(0, 0, 0)));
+
+        machine = new StateMachine(initial);
+        telemetry.addLine("[StateMachine]")
+            .addData("state", new Func<String>() {
+                @Override public String value() {
+                    StateMachine.State current = machine.currentState();
+                    if (current == null) {
+                        return "null";
+                    }
+                    return current.toString();
+                }
+            });
     }
 
     /**
@@ -28,6 +42,7 @@ public class Auto extends Hardware {
      */
     public void loop() {
         super.loop();
+        machine.update();
     }
 
     /**
@@ -37,4 +52,60 @@ public class Auto extends Hardware {
     public void stop() {
         super.stop();
     }
+
+    /**
+     * State which waits for some period.
+     */
+    public class WaitForSeconds extends StateMachine.State {
+        public WaitForSeconds(double seconds) {
+            this.seconds = seconds;
+        }
+
+        public void start() {
+            this.startTime = time;
+        }
+
+        public StateMachine.State update() {
+            if (time - startTime < seconds) {
+                return this;
+            } else {
+                return next;
+            }
+        }
+
+        public String toString() {
+            return "WaitForTime";
+        }
+
+        // The amount of time to wait.
+        private double seconds;
+        // Start time of the state.
+        private double startTime;
+    }
+
+    /**
+     * State which sets a specific Motion.
+     */
+    public class SetMotion extends StateMachine.State {
+        public SetMotion(Mecanum.Motion motion) {
+            this.motion = motion;
+        }
+
+        public void start() {
+            mecanum.setDrive(motion);
+        }
+
+        public StateMachine.State update() {
+            return next;
+        }
+
+        public String toString() {
+            return "SetMotion";
+        }
+
+        private Mecanum.Motion motion;
+    }
+
+    // State machine for the auto program.
+    private StateMachine machine;
 }

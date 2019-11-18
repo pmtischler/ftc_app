@@ -102,12 +102,6 @@ public class Hardware extends OpMode {
     }
 
     /**
-     * Registers telemetry for a ColorSensor.
-     */
-    private void registerTelemetryFor(ColorSensor sensor) {
-    }
-
-    /**
      * Main loop function.
      * Called repeatedly during the match after pressing "Play".
      */
