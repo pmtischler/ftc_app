@@ -4,6 +4,7 @@ import android.content.Context;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
+import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.teamcode.base.BlackBox;
 
 /**
@@ -62,6 +63,16 @@ public class RecordedTeleop extends Teleop {
             telemetry.update();
             requestOpModeStop();
         }
+
+        telemetry.addData("Elapsed", new Func<Double>() {
+            @Override public Double value() {
+                if (startTime == -1) {
+                    return 0.0;
+                } else {
+                    return time - startTime;
+                }
+            }
+        });
     }
 
     /**
@@ -74,9 +85,6 @@ public class RecordedTeleop extends Teleop {
             startTime = time;
         }
         double elapsed = time - startTime;
-        telemetry.addData("Recording File", filename);
-        telemetry.addData("Elapsed", elapsed);
-
         try {
             recorder.recordAllDevices(elapsed);
         } catch (Exception e) {

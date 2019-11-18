@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
+import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.teamcode.base.BlackBox;
 
 /**
@@ -58,6 +59,16 @@ public class PlaybackAuto extends OpMode {
             telemetry.update();
             requestOpModeStop();
         }
+
+        telemetry.addData("Elapsed", new Func<Double>() {
+            @Override public Double value() {
+                if (startTime == -1) {
+                    return 0.0;
+                } else {
+                    return time - startTime;
+                }
+            }
+        });
     }
 
     /**
@@ -68,9 +79,6 @@ public class PlaybackAuto extends OpMode {
             startTime = time;
         }
         double elapsed = time - startTime;
-        telemetry.addData("Playing File", filename);
-        telemetry.addData("Elapsed", elapsed);
-
         try {
             player.playback(elapsed);
         } catch (Exception e) {

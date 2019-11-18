@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.teamcode.control.Gripper;
 import org.firstinspires.ftc.teamcode.control.Mecanum;
 import org.firstinspires.ftc.teamcode.vision.Detector;
@@ -35,10 +36,75 @@ public class Hardware extends OpMode {
 
         // Setup the Skystone detector.
         skystoneLeft = hardwareMap.get(ColorSensor.class, "sl");
+        telemetry.addLine("[sl]")
+            .addData("r", new Func<Integer>() {
+                @Override public Integer value() {
+                    return skystoneLeft.red();
+                }
+            })
+            .addData("g", new Func<Integer>() {
+                @Override public Integer value() {
+                    return skystoneLeft.green();
+                }
+            })
+            .addData("b", new Func<Integer>() {
+                @Override public Integer value() {
+                    return skystoneLeft.blue();
+                }
+            });
         skystoneCenter = hardwareMap.get(ColorSensor.class, "sc");
+        telemetry.addLine("[sc]")
+            .addData("r", new Func<Integer>() {
+                @Override public Integer value() {
+                    return skystoneCenter.red();
+                }
+            })
+            .addData("g", new Func<Integer>() {
+                @Override public Integer value() {
+                    return skystoneCenter.green();
+                }
+            })
+            .addData("b", new Func<Integer>() {
+                @Override public Integer value() {
+                    return skystoneCenter.blue();
+                }
+            });
         skystoneRight = hardwareMap.get(ColorSensor.class, "sr");
-        detector = new Detector(
-                skystoneLeft, skystoneCenter, skystoneRight);
+        telemetry.addLine("[sr]")
+            .addData("r", new Func<Integer>() {
+                @Override public Integer value() {
+                    return skystoneRight.red();
+                }
+            })
+            .addData("g", new Func<Integer>() {
+                @Override public Integer value() {
+                    return skystoneRight.green();
+                }
+            })
+            .addData("b", new Func<Integer>() {
+                @Override public Integer value() {
+                    return skystoneRight.blue();
+                }
+            });
+        detector = new Detector(skystoneLeft, skystoneCenter, skystoneRight);
+        telemetry.addLine("[detector]")
+            .addData("detectsStone", new Func<Boolean>() {
+                @Override public Boolean value() {
+                    return detector.detectsStone();
+                }
+            })
+            .addData("detectsSkystone", new Func<Boolean>() {
+                @Override public Boolean value() {
+                    return detector.detectsSkystone();
+                }
+            });
+
+    }
+
+    /**
+     * Registers telemetry for a ColorSensor.
+     */
+    private void registerTelemetryFor(ColorSensor sensor) {
     }
 
     /**

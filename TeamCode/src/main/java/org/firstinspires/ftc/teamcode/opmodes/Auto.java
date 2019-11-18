@@ -28,33 +28,6 @@ public class Auto extends Hardware {
      */
     public void loop() {
         super.loop();
-
-        // Log the color sensor readings.
-        if (skystoneLeft != null) {
-            telemetry.addLine("Skystone.Color.Left")
-                .addData("red", skystoneLeft.red())
-                .addData("green", skystoneLeft.green())
-                .addData("blue", skystoneLeft.blue());
-        }
-        if (skystoneCenter != null) {
-            telemetry.addLine("Skystone.Color.Center")
-                .addData("red", skystoneCenter.red())
-                .addData("green", skystoneCenter.green())
-                .addData("blue", skystoneCenter.blue());
-        }
-        if (skystoneRight != null) {
-            telemetry.addLine("Skystone.Color.Right")
-                .addData("red", skystoneRight.red())
-                .addData("green", skystoneRight.green())
-                .addData("blue", skystoneRight.blue());
-        }
-
-        // Log whether the detector sees stone or skystone.
-        if (detector != null) {
-            telemetry.addLine("Detector")
-                .addData("detectsStone", detector.detectsStone())
-                .addData("detectsSkystone", detector.detectsSkystone());
-        }
     }
 
     /**

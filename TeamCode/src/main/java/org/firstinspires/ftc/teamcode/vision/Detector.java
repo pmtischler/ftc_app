@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.vision;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
+import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
  * Detector of Skystones using color sensors.
