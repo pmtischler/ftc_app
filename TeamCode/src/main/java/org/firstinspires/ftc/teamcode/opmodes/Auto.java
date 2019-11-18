@@ -19,6 +19,10 @@ public class Auto extends Hardware {
 
         StateMachine.State initial = new WaitForSeconds(1);
         initial
+            .setNext(new SetGantrySpeed(0.0, 0.5))
+            .setNext(new WaitForSeconds(1))
+            .setNext(new SetGantrySpeed(0.5, 0.0))
+            .setNext(new WaitForSeconds(1))
             .setNext(new SetMotion(new Mecanum.Motion(1, 0, 0)))
             .setNext(new WaitForSeconds(5))
             .setNext(new SetMotion(new Mecanum.Motion(0, 0, 0)));
@@ -104,6 +108,31 @@ public class Auto extends Hardware {
         }
 
         private Mecanum.Motion motion;
+    }
+
+    /**
+     * State which moves the Gantry.
+     */
+    public class SetGantrySpeed extends StateMachine.State {
+        public SetGantrySpeed(double xSpeed, double zSpeed) {
+            this.xSpeed = xSpeed;
+            this.zSpeed = zSpeed;
+        }
+
+        public void start() {}
+
+        public StateMachine.State update() {
+            gantry.setXSpeed(xSpeed);
+            gantry.setZSpeed(zSpeed);
+            return next;
+        }
+
+        public String toString() {
+            return "SetGantrySpeed";
+        }
+
+        private double xSpeed;
+        private double zSpeed;
     }
 
     // State machine for the auto program.

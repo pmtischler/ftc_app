@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Gripper for grabbing stones and skystones.
  */
 public class Gripper {
-
     /**
      * @param leftFinger The left finger servo.
      * @param rightFinger The right finger servo.

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.teamcode.control.Gantry;
 import org.firstinspires.ftc.teamcode.control.Gripper;
 import org.firstinspires.ftc.teamcode.control.Mecanum;
 import org.firstinspires.ftc.teamcode.vision.Detector;
@@ -33,6 +34,10 @@ public class Hardware extends OpMode {
                 hardwareMap.servo.get("gl"),
                 hardwareMap.servo.get("gr"),
                 hardwareMap.servo.get("gw"));
+        // Setup gantry for moving the gripper.
+        gantry = new Gantry(
+                hardwareMap.dcMotor.get("gx"),
+                hardwareMap.dcMotor.get("gy"));
 
         // Setup the Skystone detector.
         skystoneLeft = hardwareMap.get(ColorSensor.class, "sl");
@@ -119,6 +124,8 @@ public class Hardware extends OpMode {
     protected Mecanum.Drive mecanum;
     // Controls the gripper for stones.
     protected Gripper gripper;
+    // Gantry which moves the gripper.
+    protected Gantry gantry;
     // The Skystone color sensors.
     protected ColorSensor skystoneLeft;
     protected ColorSensor skystoneCenter;

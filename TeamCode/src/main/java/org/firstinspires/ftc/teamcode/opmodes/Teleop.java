@@ -39,6 +39,7 @@ public class Teleop extends Hardware {
         } else if (gamepad1.b) {
             gripper.open();
         }
+
         // Rotate the gripper.
         //   Y -> Front to back.
         //   X -> Left to right.
@@ -46,6 +47,28 @@ public class Teleop extends Hardware {
             gripper.rotateToFrontBack();
         } else if (gamepad1.x) {
             gripper.rotateToLeftRight();
+        }
+
+        // Extends the gantry.
+        //   R1 -> Extend.
+        //   L1 -> Retract.
+        if (gamepad1.right_bumper) {
+            gantry.setXSpeed(0.5);
+        } else if (gamepad1.left_bumper) {
+            gantry.setXSpeed(-0.5);
+        } else {
+            gantry.setXSpeed(0);
+        }
+
+        // Raises the gantry.
+        //   R2 -> Raises.
+        //   L2 -> Lowers.
+        if (gamepad1.right_trigger > 0.1) {
+            gantry.setZSpeed(gamepad1.right_trigger);
+        } else if (gamepad1.left_trigger > 0.1) {
+            gantry.setZSpeed(-gamepad1.left_trigger);
+        } else {
+            gantry.setZSpeed(0);
         }
     }
 
