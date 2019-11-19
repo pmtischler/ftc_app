@@ -3,8 +3,10 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.control.Gantry;
 import org.firstinspires.ftc.teamcode.control.Gripper;
 import org.firstinspires.ftc.teamcode.control.Mecanum;
@@ -92,7 +94,7 @@ public class Hardware extends OpMode {
                 }
             });
         detector = new Detector(skystoneLeft, skystoneCenter, skystoneRight);
-        telemetry.addLine("[detector]")
+        telemetry.addLine("[d]")
             .addData("detectsStone", new Func<Boolean>() {
                 @Override public Boolean value() {
                     return detector.detectsStone();
@@ -104,6 +106,20 @@ public class Hardware extends OpMode {
                 }
             });
 
+        distanceLeft = hardwareMap.get(DistanceSensor.class, "dl");
+        telemetry.addLine("[dl]")
+            .addData("cm", new Func<Double>() {
+                @Override public Double value() {
+                    return distanceLeft.getDistance(DistanceUnit.CM);
+                }
+            });
+        distanceRight = hardwareMap.get(DistanceSensor.class, "dr");
+        telemetry.addLine("[dr]")
+            .addData("cm", new Func<Double>() {
+                @Override public Double value() {
+                    return distanceRight.getDistance(DistanceUnit.CM);
+                }
+            });
     }
 
     /**
@@ -132,4 +148,7 @@ public class Hardware extends OpMode {
     protected ColorSensor skystoneRight;
     // Detects stones and skystone objects.
     protected Detector detector;
+    // Distance sensors.
+    protected DistanceSensor distanceLeft;
+    protected DistanceSensor distanceRight;
 }

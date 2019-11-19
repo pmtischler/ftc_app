@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.base.StateMachine;
 import org.firstinspires.ftc.teamcode.control.Gripper;
 import org.firstinspires.ftc.teamcode.control.Mecanum;
@@ -18,20 +19,31 @@ public class Auto extends Hardware {
     public void init() {
         super.init();
 
+        gripper.close();
+        gripper.rotateToLeftRight();
+        gantry.setXSpeed(0);
+        gantry.setZSpeed(0);
+
         StateMachine.State initial = new WaitForSeconds(1);
         initial
-            .setNext(new SetGripperFingers(Gripper.FingerPosition.CLOSED))
-            .setNext(new SetGripperWrist(Gripper.WristPosition.LEFT_RIGHT))
             .setNext(new SetGantrySpeed(0.0, 0.5))
             .setNext(new WaitForSeconds(1))
             .setNext(new SetGantrySpeed(0.5, 0.0))
             .setNext(new WaitForSeconds(1))
-            .setNext(new SetGripperFingers(Gripper.FingerPosition.CLOSED))
-            .setNext(new SetGripperWrist(Gripper.WristPosition.LEFT_RIGHT))
-            .setNext(new WaitForSeconds(0.5))
+            .setNext(new SetGantrySpeed(0.0, 0.0))
+            .setNext(new SetGripperFingers(Gripper.FingerPosition.OPEN))
+            .setNext(new SetGripperWrist(Gripper.WristPosition.FRONT_BACK))
             .setNext(new SetMotion(new Mecanum.Motion(1, 0, 0)))
-            .setNext(new WaitForSeconds(5))
-            .setNext(new SetMotion(new Mecanum.Motion(0, 0, 0)));
+            .setNext(new WaitUntilUnderDistance(15))
+            .setNext(new SetMotion(new Mecanum.Motion(0, 0, 0)))
+            .setNext(new SetGantrySpeed(0.0, -0.3))
+            .setNext(new WaitForSeconds(1))
+            .setNext(new SetGantrySpeed(0.0, 0.0))
+            .setNext(new SetGripperFingers(Gripper.FingerPosition.CLOSED))
+            .setNext(new WaitForSeconds(1))
+            .setNext(new SetGantrySpeed(0.0, 0.5))
+            .setNext(new WaitForSeconds(1))
+            .setNext(new SetGantrySpeed(0.0, 0.0));
 
         machine = new StateMachine(initial);
         telemetry.addLine("[StateMachine]")
@@ -185,6 +197,30 @@ public class Auto extends Hardware {
         private Gripper.WristPosition position;
     }
 
+    /**
+     * State which waits until the distance sensors read under a value.
+     */
+    public class WaitUntilUnderDistance extends StateMachine.State {
+        public WaitUntilUnderDistance(double distanceCm) {
+            this.distanceCm = distanceCm;
+        }
+
+        public void start() {}
+
+        public StateMachine.State update() {
+            if (distanceLeft.getDistance(DistanceUnit.CM) < distanceCm &&
+                    distanceRight.getDistance(DistanceUnit.CM) < distanceCm) {
+                return next;
+            }
+            return this;
+        }
+
+        public String toString() {
+            return "WaitUntilUnderDistance";
+        }
+
+        private double distanceCm;
+    }
 
     // State machine for the auto program.
     private StateMachine machine;
