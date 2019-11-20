@@ -39,7 +39,7 @@ public class Hardware extends OpMode {
         // Setup gantry for moving the gripper.
         gantry = new Gantry(
                 hardwareMap.dcMotor.get("gx"),
-                hardwareMap.dcMotor.get("gy"));
+                hardwareMap.dcMotor.get("gz"));
 
         // Setup the Skystone detector.
         skystoneLeft = hardwareMap.get(ColorSensor.class, "sl");
