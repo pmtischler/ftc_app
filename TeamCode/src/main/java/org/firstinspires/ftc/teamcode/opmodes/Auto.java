@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import java.lang.Math;
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.base.StateMachine;
@@ -19,31 +20,67 @@ public class Auto extends Hardware {
     public void init() {
         super.init();
 
-        gripper.close();
-        gripper.rotateToLeftRight();
-        gantry.setXSpeed(0);
-        gantry.setZSpeed(0);
-
         StateMachine.State initial = new WaitForSeconds(1);
         initial
-            .setNext(new SetGantrySpeed(0.0, 0.5))
-            .setNext(new WaitForSeconds(1))
-            .setNext(new SetGantrySpeed(0.5, 0.0))
-            .setNext(new WaitForSeconds(1))
-            .setNext(new SetGantrySpeed(0.0, 0.0))
-            .setNext(new SetGripperFingers(Gripper.FingerPosition.OPEN))
-            .setNext(new SetGripperWrist(Gripper.WristPosition.FRONT_BACK))
+            // Drive up to the stones. Stop when at color sensing range.
             .setNext(new SetMotion(new Mecanum.Motion(1, 0, 0)))
             .setNext(new WaitUntilUnderDistance(15))
             .setNext(new SetMotion(new Mecanum.Motion(0, 0, 0)))
+            // Move right until skystone detected, fallen off, or timeout.
+            .setNext(new SetMotion(new Mecanum.Motion(1, Math.PI * 1.5, 0)))
+            .setNext(new WaitUntilDetectSkystone(10.0))
+            .setNext(new SetMotion(new Mecanum.Motion(0, 0, 0)))
+            // Move the gantry & gripper to grab whatever is in front.
+            // Raise the gantry.
+            .setNext(new SetGantrySpeed(0.0, 0.5))
+            .setNext(new WaitForSeconds(1))
+            .setNext(new SetGantrySpeed(0.0, 0.0))
+            // Extend the gantry.
+            .setNext(new SetGantrySpeed(0.5, 0.0))
+            .setNext(new WaitForSeconds(1))
+            .setNext(new SetGantrySpeed(0.0, 0.0))
+            // Open the gripper and position to pick.
+            .setNext(new SetGripperFingers(Gripper.FingerPosition.OPEN))
+            .setNext(new SetGripperWrist(Gripper.WristPosition.FRONT_BACK))
+            // Lower the gantry.
             .setNext(new SetGantrySpeed(0.0, -0.3))
             .setNext(new WaitForSeconds(1))
             .setNext(new SetGantrySpeed(0.0, 0.0))
+            // Grip the stone/skystone.
             .setNext(new SetGripperFingers(Gripper.FingerPosition.CLOSED))
             .setNext(new WaitForSeconds(1))
+            // Raise the gantry to raise the stone.
             .setNext(new SetGantrySpeed(0.0, 0.5))
             .setNext(new WaitForSeconds(1))
-            .setNext(new SetGantrySpeed(0.0, 0.0));
+            .setNext(new SetGantrySpeed(0.0, 0.0))
+            // Back away from the stone line to align with drop path.
+            .setNext(new SetMotion(new Mecanum.Motion(1, Math.PI, 0)))
+            .setNext(new WaitForSeconds(1))
+            .setNext(new SetMotion(new Mecanum.Motion(0, 0, 0)))
+            // Turn in place to point at stone drop location.
+            .setNext(new SetMotion(new Mecanum.Motion(0, 0, 0.5)))
+            .setNext(new WaitForSeconds(1))
+            .setNext(new SetMotion(new Mecanum.Motion(0, 0, 0)))
+            // Drive up to the drop location.
+            .setNext(new SetMotion(new Mecanum.Motion(1, 0, 0)))
+            .setNext(new WaitUntilUnderDistance(100))
+            .setNext(new SetMotion(new Mecanum.Motion(0, 0, 0)))
+            // Drop the stone.
+            .setNext(new SetGripperFingers(Gripper.FingerPosition.OPEN_LEFT))
+            .setNext(new WaitForSeconds(1))
+            .setNext(new SetGripperFingers(Gripper.FingerPosition.OPEN))
+            .setNext(new WaitForSeconds(1))
+            // Back away from the drop.
+            .setNext(new SetMotion(new Mecanum.Motion(1, Math.PI, 0)))
+            .setNext(new WaitForSeconds(1))
+            .setNext(new SetMotion(new Mecanum.Motion(0, 0, 0)))
+            // Turn in place to point at stop line under bridge.
+            .setNext(new SetMotion(new Mecanum.Motion(0, 0, 0.5)))
+            .setNext(new WaitForSeconds(1))
+            .setNext(new SetMotion(new Mecanum.Motion(0, 0, 0)))
+            // Drive until over the stop line.
+            .setNext(new SetMotion(new Mecanum.Motion(1, 0, 0)))
+            .setNext(new WaitForSeconds(1));
 
         machine = new StateMachine(initial);
         telemetry.addLine("[StateMachine]")
@@ -220,6 +257,44 @@ public class Auto extends Hardware {
         }
 
         private double distanceCm;
+    }
+
+    /**
+     * State which waits until Skystone detected, fallen off path, or timeout.
+     * The timeout prevents driving forever in error case.
+     */
+    public class WaitUntilDetectSkystone extends StateMachine.State {
+        public WaitUntilDetectSkystone(double timeoutSec) {
+            this.timeoutSec = timeoutSec;
+        }
+
+        public void start() {
+            startTime = time;
+        }
+
+        public StateMachine.State update() {
+            if (time - startTime >= timeoutSec) {
+                // Timed out.
+                return next;
+            }
+            if (detector.detectsSkystone()) {
+                // Found the skystone.
+                return next;
+            }
+            if (!detector.detectsStone()) {
+                // Fell off the stone path.
+                return next;
+            }
+            // Still searching.
+            return this;
+        }
+
+        public String toString() {
+            return "WaitUntilDetectSkystone";
+        }
+
+        private double timeoutSec;
+        private double startTime;
     }
 
     // State machine for the auto program.

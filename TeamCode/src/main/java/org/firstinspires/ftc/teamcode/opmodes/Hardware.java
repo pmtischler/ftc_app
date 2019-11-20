@@ -120,6 +120,12 @@ public class Hardware extends OpMode {
                     return distanceRight.getDistance(DistanceUnit.CM);
                 }
             });
+
+        // Initialize to retracted position.
+        gripper.close();
+        gripper.rotateToLeftRight();
+        gantry.setXSpeed(0);
+        gantry.setZSpeed(0);
     }
 
     /**
