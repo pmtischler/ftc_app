@@ -281,10 +281,6 @@ public class Auto extends Hardware {
                 // Found the skystone.
                 return next;
             }
-            if (!detector.detectsStone()) {
-                // Fell off the stone path.
-                return next;
-            }
             // Still searching.
             return this;
         }
