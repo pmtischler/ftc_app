@@ -40,7 +40,7 @@ public class Detector {
      * @return Whether the sensor is yellow.
      */
     private boolean isYellow(ColorSensor sensor) {
-        return Color.rgbIsYellow(
+        return Color.rgbIsYellowAfterNormalization(
                 sensor.red(), sensor.green(), sensor.blue());
     }
 

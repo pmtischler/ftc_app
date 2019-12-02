@@ -64,7 +64,7 @@ public class Color {
         int value = toUnsignedInt(pixel[2]);
         // Not too white, not too black, in the range of yellow hue.
         // Hue is [0,179], Saturation is [0,255], Value is [0,255].
-        return hue > 50/2 && hue < 70/2 && saturation > 40 && value > 40;
+        return hue > 30/2 && hue < 90/2 && saturation > 30 && value > 20;
     }
 
     // Utility not available in FTC's version of Java.
