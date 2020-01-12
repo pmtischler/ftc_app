@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.base.PeriodicTelemetry;
 import org.firstinspires.ftc.teamcode.control.Gantry;
 import org.firstinspires.ftc.teamcode.control.Gripper;
 import org.firstinspires.ftc.teamcode.control.Mecanum;
@@ -24,6 +25,10 @@ public class Hardware extends OpMode {
     public void init() {
         // Setup OpenCV library for Computer Vision.
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
+        // Generate telemetry at defined rate.
+        periodicTelemetry = new PeriodicTelemetry(telemetry);
+        periodicTelemetry.setPeriodSeconds(1.0);
 
         // Setup motors for Mecanum driving.
         mecanum = new Mecanum.Drive(
@@ -43,83 +48,29 @@ public class Hardware extends OpMode {
 
         // Setup the Skystone detector.
         skystoneLeft = hardwareMap.get(ColorSensor.class, "sl");
-        telemetry.addLine("[sl]")
-            .addData("r", new Func<Integer>() {
-                @Override public Integer value() {
-                    return skystoneLeft.red();
-                }
-            })
-            .addData("g", new Func<Integer>() {
-                @Override public Integer value() {
-                    return skystoneLeft.green();
-                }
-            })
-            .addData("b", new Func<Integer>() {
-                @Override public Integer value() {
-                    return skystoneLeft.blue();
-                }
-            });
+        periodicTelemetry.addTelemetrySource(
+                new ColorSensorTelemetry("sl", skystoneLeft));
         skystoneCenter = hardwareMap.get(ColorSensor.class, "sc");
-        telemetry.addLine("[sc]")
-            .addData("r", new Func<Integer>() {
-                @Override public Integer value() {
-                    return skystoneCenter.red();
-                }
-            })
-            .addData("g", new Func<Integer>() {
-                @Override public Integer value() {
-                    return skystoneCenter.green();
-                }
-            })
-            .addData("b", new Func<Integer>() {
-                @Override public Integer value() {
-                    return skystoneCenter.blue();
-                }
-            });
+        periodicTelemetry.addTelemetrySource(
+                new ColorSensorTelemetry("sc", skystoneCenter));
         skystoneRight = hardwareMap.get(ColorSensor.class, "sr");
-        telemetry.addLine("[sr]")
-            .addData("r", new Func<Integer>() {
-                @Override public Integer value() {
-                    return skystoneRight.red();
-                }
-            })
-            .addData("g", new Func<Integer>() {
-                @Override public Integer value() {
-                    return skystoneRight.green();
-                }
-            })
-            .addData("b", new Func<Integer>() {
-                @Override public Integer value() {
-                    return skystoneRight.blue();
-                }
-            });
+        periodicTelemetry.addTelemetrySource(
+                new ColorSensorTelemetry("sr", skystoneRight));
         detector = new Detector(skystoneLeft, skystoneCenter, skystoneRight);
-        telemetry.addLine("[d]")
-            .addData("detectsStone", new Func<Boolean>() {
-                @Override public Boolean value() {
-                    return detector.detectsStone();
-                }
-            })
-            .addData("detectsSkystone", new Func<Boolean>() {
-                @Override public Boolean value() {
-                    return detector.detectsSkystone();
-                }
-            });
+        periodicTelemetry.addTelemetrySource(new Func<String>() {
+            @Override public String value() {
+                return String.format(
+                        "[detector] stone:%b skystone:%b",
+                        detector.detectsStone(), detector.detectsSkystone());
+            }
+        });
 
         distanceLeft = hardwareMap.get(DistanceSensor.class, "dl");
-        telemetry.addLine("[dl]")
-            .addData("cm", new Func<Double>() {
-                @Override public Double value() {
-                    return distanceLeft.getDistance(DistanceUnit.CM);
-                }
-            });
+        periodicTelemetry.addTelemetrySource(
+                new DistanceSensorTelemetry("dl", distanceLeft));
         distanceRight = hardwareMap.get(DistanceSensor.class, "dr");
-        telemetry.addLine("[dr]")
-            .addData("cm", new Func<Double>() {
-                @Override public Double value() {
-                    return distanceRight.getDistance(DistanceUnit.CM);
-                }
-            });
+        periodicTelemetry.addTelemetrySource(
+                new DistanceSensorTelemetry("dr", distanceRight));
 
         // Initialize to retracted position.
         gripper.close();
@@ -133,6 +84,7 @@ public class Hardware extends OpMode {
      * Called repeatedly during the match after pressing "Play".
      */
     public void loop() {
+        periodicTelemetry.loop(time);
     }
 
     /**
@@ -142,6 +94,46 @@ public class Hardware extends OpMode {
     public void stop() {
     }
 
+    /**
+     * Generates telemetry lines for a color sensor.
+     */
+    private static class ColorSensorTelemetry implements Func<String> {
+        ColorSensorTelemetry(String name, ColorSensor sensor) {
+            this.name = name;
+            this.sensor = sensor;
+        }
+
+        @Override public String value() {
+            return String.format(
+                    "[%s] r:%d g:%d b:%d",
+                    name, sensor.red(), sensor.green(), sensor.blue());
+        }
+
+        private String name;
+        private ColorSensor sensor;
+    }
+
+    /**
+     * Generates telemetry lines for a distance sensor.
+     */
+    private static class DistanceSensorTelemetry implements Func<String> {
+        DistanceSensorTelemetry(String name, DistanceSensor sensor) {
+            this.name = name;
+            this.sensor = sensor;
+        }
+
+        @Override public String value() {
+            return String.format(
+                    "[%s] cm:%f",
+                    name, sensor.getDistance(DistanceUnit.CM));
+        }
+
+        private String name;
+        private DistanceSensor sensor;
+    }
+
+    // Periodic telemetry generation at user-controlled rate.
+    PeriodicTelemetry periodicTelemetry;
     // Controls driving of the robot.
     protected Mecanum.Drive mecanum;
     // Controls the gripper for stones.

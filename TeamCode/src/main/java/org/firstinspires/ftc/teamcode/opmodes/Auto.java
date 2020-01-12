@@ -83,16 +83,15 @@ public class Auto extends Hardware {
             .setNext(new WaitForSeconds(1));
 
         machine = new StateMachine(initial);
-        telemetry.addLine("[StateMachine]")
-            .addData("state", new Func<String>() {
-                @Override public String value() {
-                    StateMachine.State current = machine.currentState();
-                    if (current == null) {
-                        return "null";
-                    }
-                    return current.toString();
+        periodicTelemetry.addTelemetrySource(new Func<String>() {
+            @Override public String value() {
+                StateMachine.State current = machine.currentState();
+                if (current == null) {
+                    return "[State] Null";
                 }
-            });
+                return String.format("[State] %s", current.toString());
+            }
+        });
     }
 
     /**

@@ -63,16 +63,6 @@ public class RecordedTeleop extends Teleop {
             telemetry.update();
             requestOpModeStop();
         }
-
-        telemetry.addData("Elapsed", new Func<Double>() {
-            @Override public Double value() {
-                if (startTime == -1) {
-                    return 0.0;
-                } else {
-                    return time - startTime;
-                }
-            }
-        });
     }
 
     /**
